@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audiora - AI-Powered Wearable Sound Awareness System</title>
+    <meta name="description" content="Enhancing safety and independence for individuals with hearing loss through real-time environmental sound recognition and directional feedback.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-purple: #8B5CF6;
+            --secondary-purple: #A78BFA;
+            --accent-purple: #C4B5FD;
+            --light-purple: #F5F3FF;
+            --dark-purple: #6D28D9;
+            --soft-purple: #E9D5FF;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, var(--primary-purple) 0%, var(--secondary-purple) 50%, var(--accent-purple) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .gradient-bg::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            animation: float 20s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, var(--primary-purple) 0%, var(--accent-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hover-scale {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .hover-scale:hover {
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
+        }
+        
+        .fade-in {
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px) scale(0.95); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1); 
+            }
+        }
+        
+        .pulse-animation {
+            animation: pulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { 
+                transform: scale(1); 
+                opacity: 1;
+            }
+            50% { 
+                transform: scale(1.08); 
+                opacity: 0.8;
+            }
+        }
+        
+        .feature-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--accent-purple), var(--primary-purple), var(--accent-purple));
+            border-radius: 20px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: -1;
+        }
+        
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+        
+        .feature-card:hover {
+            border-color: var(--accent-purple);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(139, 92, 246, 0.25);
+        }
+        
+        .scroll-smooth {
+            scroll-behavior: smooth;
+        }
+        
+        .nav-fixed {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+        }
+        
+        /* Fix section stacking */
+        section {
+            position: relative;
+        }
+        
+        /* Ensure proper spacing between sections */
+        .section-spacing {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+        
+        /* Whimsical shapes */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            opacity: 0.6;
+            animation: blob 7s ease-in-out infinite;
+        }
+        
+        @keyframes blob {
+            0%, 100% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+        
+        .rounded-soft {
+            border-radius: 24px;
+        }
+        
+        .text-shadow-soft {
+            text-shadow: 0 2px 10px rgba(139, 92, 246, 0.2);
+        }
+        
+        /* Floating elements */
+        .float-element {
+            animation: floatUp 4s ease-in-out infinite;
+        }
+        
+        @keyframes floatUp {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* Soft buttons */
+        .btn-soft {
+            background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-soft:hover {
+            background: linear-gradient(135deg, rgba(255,255,255,1), rgba(255,255,255,0.9));
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.2);
+        }
+    </style>
+</head>
+<body class="scroll-smooth">
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed top-0 w-full z-50 nav-fixed border-b border-purple-100">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-headphones text-2xl text-purple-600"></i>
+                    <span class="text-2xl font-bold text-gradient">Audiora</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#problem" class="text-gray-700 hover:text-purple-600 transition">Problem</a>
+                    <a href="#solution" class="text-gray-700 hover:text-purple-600 transition">Solution</a>
+                    <a href="#mission" class="text-gray-700 hover:text-purple-600 transition">Mission</a>
+                    <a href="#founder" class="text-gray-700 hover:text-purple-600 transition">Founder</a>
+                    <a href="#advocacy" class="text-gray-700 hover:text-purple-600 transition">Advocacy</a>
+                    <a href="#how-it-works" class="text-gray-700 hover:text-purple-600 transition">How It Works</a>
+                    <a href="#contact" class="text-gray-700 hover:text-purple-600 transition">Contact</a>
+                </div>
+                <button id="mobile-menu-btn" class="md:hidden text-purple-600">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-purple-100">
+            <div class="container mx-auto px-6 py-4 space-y-3">
+                <a href="#problem" class="block text-gray-700 hover:text-purple-600 transition">Problem</a>
+                <a href="#solution" class="block text-gray-700 hover:text-purple-600 transition">Solution</a>
+                <a href="#mission" class="block text-gray-700 hover:text-purple-600 transition">Mission</a>
+                <a href="#founder" class="block text-gray-700 hover:text-purple-600 transition">Founder</a>
+                <a href="#advocacy" class="block text-gray-700 hover:text-purple-600 transition">Advocacy</a>
+                <a href="#how-it-works" class="block text-gray-700 hover:text-purple-600 transition">How It Works</a>
+                <a href="#contact" class="block text-gray-700 hover:text-purple-600 transition">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 1️⃣ Hero Section -->
+    <section class="min-h-screen flex items-center justify-center gradient-bg text-white pt-20 relative z-10">
+        <!-- Whimsical floating blobs -->
+        <div class="blob w-64 h-64 bg-purple-400 top-10 left-10"></div>
+        <div class="blob w-48 h-48 bg-purple-300 bottom-20 right-20" style="animation-delay: 2s;"></div>
+        <div class="blob w-32 h-32 bg-purple-200 top-1/2 left-1/4" style="animation-delay: 4s;"></div>
+        
+        <div class="container mx-auto px-6 text-center fade-in relative z-10">
+            <div class="float-element mb-6">
+                <i class="fas fa-headphones-alt text-6xl mb-4 text-white opacity-90"></i>
+            </div>
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 text-shadow-soft">Audiora</h1>
+            <h2 class="text-2xl md:text-4xl mb-8 font-light opacity-95">AI-Powered Wearable Sound Awareness System</h2>
+            <p class="text-lg md:text-xl mb-12 max-w-3xl mx-auto leading-relaxed opacity-90">
+                Enhancing safety and independence for individuals with hearing loss through real-time environmental sound recognition and directional feedback.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button onclick="scrollToSection('video')" class="btn-soft text-purple-600 px-8 py-4 rounded-full font-semibold hover-scale flex items-center justify-center space-x-2">
+                    <i class="fas fa-play"></i>
+                    <span>Watch Operation Video</span>
+                </button>
+                <button onclick="scrollToSection('contact')" class="border-2 border-white text-white px-8 py-4 rounded-full font-semibold hover-scale flex items-center justify-center space-x-2 backdrop-blur-sm">
+                    <i class="fas fa-handshake"></i>
+                    <span>Support the Mission</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2️⃣ The Problem -->
+    <section id="problem" class="py-20 bg-gradient-to-br from-purple-50 to-pink-50 relative z-20">
+        <!-- Decorative elements -->
+        <div class="absolute top-10 right-10 w-20 h-20 bg-purple-200 rounded-full opacity-30 float-element"></div>
+        <div class="absolute bottom-10 left-10 w-16 h-16 bg-pink-200 rounded-full opacity-30 float-element" style="animation-delay: 1s;"></div>
+        
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="max-w-4xl mx-auto text-center fade-in">
+                <h2 class="text-4xl md:text-5xl font-bold mb-8 text-gradient">The Problem</h2>
+                <div class="space-y-6 text-lg text-gray-700">
+                    <p class="leading-relaxed bg-white/60 backdrop-blur-sm p-6 rounded-2xl">
+                        <span class="font-semibold text-purple-600">Over 1.5 billion people</span> worldwide experience hearing loss, according to the World Health Organization.
+                    </p>
+                    <p class="leading-relaxed bg-white/60 backdrop-blur-sm p-6 rounded-2xl">
+                        Most assistive technologies primarily focus on speech recognition.
+                    </p>
+                    <p class="leading-relaxed bg-white/60 backdrop-blur-sm p-6 rounded-2xl">
+                        Environmental sound detection and localization remain largely unaddressed.
+                    </p>
+                    <p class="leading-relaxed font-semibold bg-gradient-to-r from-purple-100 to-pink-100 p-6 rounded-2xl border border-purple-200">
+                        Failing to recognize warning sounds such as sirens, vehicle horns, or explosions creates serious safety risks and limits independent living.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3️⃣ The Solution -->
+    <section id="solution" class="py-20 bg-gradient-to-br from-white to-purple-50">
+        <!-- Decorative elements -->
+        <div class="absolute top-20 left-20 w-24 h-24 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full opacity-40 float-element"></div>
+        <div class="absolute bottom-20 right-20 w-32 h-32 bg-gradient-to-br from-pink-200 to-purple-200 rounded-full opacity-30 float-element" style="animation-delay: 2s;"></div>
+        
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6 text-gradient">The Solution – What is Audiora?</h2>
+                <p class="text-xl text-gray-700 max-w-3xl mx-auto bg-white/70 backdrop-blur-sm p-6 rounded-2xl">
+                    Audiora is a wearable AI-based system that transforms environmental sound into accessible real-time feedback.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+                <div class="feature-card bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-2xl text-center hover-scale">
+                    <div class="text-5xl mb-4 text-purple-600 float-element">🔊</div>
+                    <h3 class="font-bold text-lg mb-2">Sound Recognition</h3>
+                    <p class="text-gray-700">Detects environmental risk-related sounds.</p>
+                </div>
+                <div class="feature-card bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-2xl text-center hover-scale">
+                    <div class="text-5xl mb-4 text-purple-600 float-element" style="animation-delay: 0.5s;">📍</div>
+                    <h3 class="font-bold text-lg mb-2">Direction Detection</h3>
+                    <p class="text-gray-700">Identifies sound source location (left, right, center).</p>
+                </div>
+                <div class="feature-card bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-2xl text-center hover-scale">
+                    <div class="text-5xl mb-4 text-purple-600 float-element" style="animation-delay: 1s;">📳</div>
+                    <h3 class="font-bold text-lg mb-2">Multimodal Alerts</h3>
+                    <p class="text-gray-700">Provides visual and vibration feedback.</p>
+                </div>
+                <div class="feature-card bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-2xl text-center hover-scale">
+                    <div class="text-5xl mb-4 text-purple-600 float-element" style="animation-delay: 1.5s;">⚡</div>
+                    <h3 class="font-bold text-lg mb-2">Real-Time Processing</h3>
+                    <p class="text-gray-700">Operates with ~150 ms update intervals.</p>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-purple-100 via-pink-100 to-purple-100 p-8 rounded-3xl backdrop-blur-sm">
+                <h3 class="text-2xl font-bold mb-6 text-center text-purple-800">Recognized Sound Types:</h3>
+                <div class="grid md:grid-cols-3 lg:grid-cols-5 gap-4">
+                    <div class="bg-white/80 backdrop-blur-sm p-4 rounded-2xl text-center hover-scale">
+                        <div class="text-4xl mb-2 float-element">🚨</div>
+                        <span class="font-semibold">Sirens</span>
+                    </div>
+                    <div class="bg-white/80 backdrop-blur-sm p-4 rounded-2xl text-center hover-scale">
+                        <div class="text-4xl mb-2 float-element" style="animation-delay: 0.2s;">🚗</div>
+                        <span class="font-semibold">Vehicle horns</span>
+                    </div>
+                    <div class="bg-white/80 backdrop-blur-sm p-4 rounded-2xl text-center hover-scale">
+                        <div class="text-4xl mb-2 float-element" style="animation-delay: 0.4s;">💥</div>
+                        <span class="font-semibold">Explosions</span>
+                    </div>
+                    <div class="bg-white/80 backdrop-blur-sm p-4 rounded-2xl text-center hover-scale">
+                        <div class="text-4xl mb-2 float-element" style="animation-delay: 0.6s;">🪟</div>
+                        <span class="font-semibold">Glass breaking</span>
+                    </div>
+                    <div class="bg-white/80 backdrop-blur-sm p-4 rounded-2xl text-center hover-scale">
+                        <div class="text-4xl mb-2 float-element" style="animation-delay: 0.8s;">🌫</div>
+                        <span class="font-semibold">Ambient noise</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+     <!-- 📸 Photo & Video Album -->
+    <section id="media-album" class="py-20 bg-gradient-to-br from-white to-purple-50">
+        <!-- Decorative elements -->
+        <div class="absolute top-15 left-20 w-32 h-32 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full opacity-30 float-element"></div>
+        <div class="absolute bottom-15 right-20 w-24 h-24 bg-gradient-to-br from-pink-200 to-purple-200 rounded-full opacity-25 float-element" style="animation-delay: 1.8s;"></div>
+        
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="max-w-6xl mx-auto fade-in">
+                <h2 class="text-4xl md:text-5xl font-bold mb-8 text-center text-gradient">Photo & Video Album</h2>
+                <p class="text-xl text-gray-700 mb-12 text-center bg-white/70 backdrop-blur-sm p-6 rounded-2xl">
+                    Browse through our comprehensive collection of photos and videos showcasing Audiora's journey and impact.
+                </p>
+                
+                <!-- Tab Navigation -->
+                <div class="flex justify-center mb-8">
+                    <div class="bg-white/70 backdrop-blur-sm rounded-full p-1 inline-flex">
+                        <button onclick="showAlbumTab('photos')" id="photos-tab" class="px-6 py-2 rounded-full font-semibold transition-all bg-purple-600 text-white">
+                            <i class="fas fa-images mr-2"></i>Photos
+                        </button>
+                        <button onclick="showAlbumTab('videos')" id="videos-tab" class="px-6 py-2 rounded-full font-semibold transition-all text-purple-600 hover:bg-purple-100">
+                            <i class="fas fa-video mr-2"></i>Videos
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Photos Section -->
+                <div id="photos-section" class="block">
+                    <div class="bg-gradient-to-r from-purple-100 to-pink-100 p-6 rounded-2xl">
+                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-h-96 overflow-y-auto p-2 bg-white/30 rounded-xl">
+                            <!-- Album Photo 1 -->
+                            <div class="relative group cursor-pointer">
+                                <div class="aspect-w-16 aspect-h-12 bg-gradient-to-br from-purple-200 to-pink-200 rounded-lg flex items-center justify-center overflow-hidden">
+                                    <img src="assets/images/i1.jpeg" alt="Album Photo 1" class="w-full h-full object-cover">
+                                </div>
+                               
+                            </div>
+                            
+                            <!-- Album Photo 2 -->
+                            <div class="relative group cursor-pointer">
+                                <div class="aspect-w-16 aspect-h-12 bg-gradient-to-br from-pink-200 to-purple-200 rounded-lg flex items-center justify-center overflow-hidden">
+                                    <img src="assets/images/i2.jpeg" alt="Album Photo 2" class="w-full h-full object-cover">
+                                </div>
+                                
+                            </div>
+                    </div>
+                </div>
+                </div>
+                
+                <!-- Videos Section -->
+                <div id="videos-section" class="hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Album Video 1 -->
+                        <div class="bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl overflow-hidden shadow-lg hover-scale">
+                            <div class="aspect-video relative">
+                                <video class="w-full h-full object-cover" controls>
+                                    <source src="assets/videos/v1.mp4" type="video/mp4">
+                                    
+                                </video>
+                            </div>
+                            <div class="p-4">
+                                <h4 class="font-bold text-lg mb-2 text-purple-800">Device Testing</h4>
+                                <p class="text-gray-700 mb-2">Comprehensive testing of sound recognition capabilities.</p>
+                                <div class="flex gap-2">
+                                   
+                                    <span class="bg-pink-200 text-purple-700 px-2 py-1 rounded text-xs">HD</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Album Video 2 -->
+                        <div class="bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl overflow-hidden shadow-lg hover-scale">
+                            <div class="aspect-video relative">
+                                <video class="w-full h-full object-cover" controls>
+                                    <source src="assets/videos/v2.mp4" type="video/mp4">
+                                    
+                                </video>
+                            </div>
+                            <div class="p-4">
+                                <h4 class="font-bold text-lg mb-2 text-purple-800">Device Testing</h4>
+                                
+                                <div class="flex gap-2">
+                                   
+                                    <span class="bg-pink-200 text-purple-700 px-2 py-1 rounded text-xs">HD</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        <!-- Album Video 3 -->
+                        <div class="bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl overflow-hidden shadow-lg hover-scale">
+                            <div class="aspect-video relative">
+                                <video class="w-full h-full object-cover" controls>
+                                    <source src="assets/videos/v3.mp4" type="video/mp4">
+                                    
+                                </video>
+                            </div>
+                            <div class="p-4">
+                                <h4 class="font-bold text-lg mb-2 text-purple-800">Device Testing</h4>
+                                <div class="flex gap-2">
+                                   
+                                    <span class="bg-pink-200 text-purple-700 px-2 py-1 rounded text-xs">HD</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Album Video 4 -->
+                        <div class="bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl overflow-hidden shadow-lg hover-scale">
+                            <div class="aspect-video relative">
+                                <video class="w-full h-full object-cover" controls>
+                                    <source src="assets/videos/v4.mp4" type="video/mp4">
+                                    
+                                </video>
+                            </div>
+                            <div class="p-4">
+                                <h4 class="font-bold text-lg mb-2 text-purple-800">Device Testing</h4>
+                                
+                                <div class="flex gap-2">
+                                    
+                                    <span class="bg-pink-200 text-purple-700 px-2 py-1 rounded text-xs">HD</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Album Video 5 -->
+                        <div class="bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl overflow-hidden shadow-lg hover-scale">
+                            <div class="aspect-video relative">
+                                <video class="w-full h-full object-cover" controls>
+                                    <source src="assets/videos/v5.mp4" type="video/mp4">
+                                    
+                                </video>
+                            </div>
+                            <div class="p-4">
+                                <h4 class="font-bold text-lg mb-2 text-purple-800">Device Testing</h4>
+                                
+                                <div class="flex gap-2">
+                                    
+                                    <span class="bg-pink-200 text-purple-700 px-2 py-1 rounded text-xs">HD</span>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <p class="text-sm text-purple-600 mt-4 text-center">🎬 Videos are ready to play • Click play button to start</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4️⃣ Mission -->
+    <section id="mission" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="max-w-4xl mx-auto text-center fade-in">
+                <h2 class="text-4xl md:text-5xl font-bold mb-8 text-gradient">Mission</h2>
+                <p class="text-xl text-gray-700 mb-12 leading-relaxed">
+                    Audiora exists to improve everyday safety and independence for individuals with hearing loss by transforming environmental sound into accessible, real-time feedback.
+                </p>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white p-6 rounded-xl shadow-lg hover-scale">
+                        <i class="fas fa-eye text-3xl text-purple-600 mb-4"></i>
+                        <h3 class="font-bold mb-2">Increase Situational Awareness</h3>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg hover-scale">
+                        <i class="fas fa-shield-alt text-3xl text-purple-600 mb-4"></i>
+                        <h3 class="font-bold mb-2">Reduce Safety Risks</h3>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg hover-scale">
+                        <i class="fas fa-user-check text-3xl text-purple-600 mb-4"></i>
+                        <h3 class="font-bold mb-2">Support Independent Living</h3>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg hover-scale">
+                        <i class="fas fa-heartbeat text-3xl text-purple-600 mb-4"></i>
+                        <h3 class="font-bold mb-2">Complement Clinical Rehabilitation</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5️⃣ Founder -->
+    <section id="founder" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="max-w-4xl mx-auto fade-in">
+                <h2 class="text-4xl md:text-5xl font-bold mb-8 text-center text-gradient">Meet the Founder</h2>
+                <div class="bg-light-purple p-8 rounded-2xl">
+                    <div class="flex flex-col md:flex-row items-center gap-8">
+                        <div class="w-48 h-48 bg-purple-200 rounded-full flex items-center justify-center">
+                            <img src="assets/images/zerya.jpeg" alt="Zerya Cimen" class="w-full h-full object-cover rounded-full">
+                        </div>
+                        <div class="flex-1 text-center md:text-left">
+                            <h3 class="text-2xl font-bold mb-4 text-purple-800">Zerya Cimen</h3>
+                            <p class="text-lg text-gray-700 leading-relaxed mb-4">
+                                Audiora was founded by Zerya Cimen, a student innovator focused on AI-driven assistive technologies. Motivated by the safety challenges faced by individuals with hearing loss, she developed Audiora to bridge the gap between environmental awareness and wearable accessibility.
+                            </p>
+                            <p class="text-lg text-gray-700 leading-relaxed">
+                                Her work combines embedded systems, TinyML, and human-centered design to create practical, real-world impact.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6️⃣ Advocacy & Community Leadership -->
+    <section id="advocacy" class="py-20 bg-gradient-to-br from-purple-50 to-pink-50">
+        <!-- Decorative elements -->
+        <div class="absolute top-10 right-20 w-28 h-28 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full opacity-40 float-element"></div>
+        <div class="absolute bottom-10 left-20 w-20 h-20 bg-gradient-to-br from-pink-200 to-purple-200 rounded-full opacity-30 float-element" style="animation-delay: 1.5s;"></div>
+        
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="max-w-4xl mx-auto fade-in">
+                <h2 class="text-4xl md:text-5xl font-bold mb-8 text-center text-gradient">Advocacy & Social Impact</h2>
+                <p class="text-xl text-gray-700 mb-12 text-center bg-white/70 backdrop-blur-sm p-6 rounded-2xl">
+                    Beyond technology development, founder actively works to promote disability inclusion and educational equity.
+                </p>
+                
+
+                <!-- Fundraiser Achievement -->
+                <div class="bg-gradient-to-r from-purple-100 to-pink-100 p-8 rounded-3xl shadow-lg mb-8 backdrop-blur-sm">
+                    <div class="flex flex-col md:flex-row items-center gap-8">
+                        <div class="flex-1">
+                            <h3 class="text-2xl font-bold mb-4 text-purple-800">Fundraising for Turkish Association of the Deaf</h3>
+                            <p class="text-lg text-gray-700 mb-4">
+                                Organized a fundraiser raising <span class="font-bold text-purple-600">20,000 TRY</span> for Turkish Association of the Deaf, coordinating donations, sales, and awareness campaigns.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-gradient-to-r from-purple-200 to-pink-200 text-purple-700 px-3 py-1 rounded-full text-sm">Community Leadership</span>
+                                <span class="bg-gradient-to-r from-purple-200 to-pink-200 text-purple-700 px-3 py-1 rounded-full text-sm">Disability Advocacy</span>
+                                <span class="bg-gradient-to-r from-purple-200 to-pink-200 text-purple-700 px-3 py-1 rounded-full text-sm">Fundraising</span>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <!-- TEA Leadership -->
+                <div class="bg-gradient-to-r from-pink-100 to-purple-100 p-8 rounded-3xl shadow-lg mb-8 backdrop-blur-sm">
+                    <div class="flex flex-col md:flex-row items-center gap-8">
+                        
+                        <div class="flex-1">
+                            <h3 class="text-2xl font-bold mb-4 text-purple-800">Co-Founder & President of The Advocacy Network (TEA)</h3>
+                            <p class="text-lg text-gray-700 mb-4">
+                                Student-founded non-governmental organization focused on educational equity, disability advocacy, and health-based social initiatives.
+                            </p>
+                            <p class="text-lg text-gray-700 mb-4">
+                                Led teams, coordinated community programs, and organized awareness-driven events.
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-gradient-to-r from-pink-200 to-purple-200 text-purple-700 px-3 py-1 rounded-full text-sm">Leadership</span>
+                                <span class="bg-gradient-to-r from-pink-200 to-purple-200 text-purple-700 px-3 py-1 rounded-full text-sm">Educational Equity</span>
+                                <span class="bg-gradient-to-r from-pink-200 to-purple-200 text-purple-700 px-3 py-1 rounded-full text-sm">Social Impact</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Impact Summary -->
+                <div class="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 p-8 rounded-3xl text-white backdrop-blur-sm">
+                    <h3 class="text-2xl font-bold mb-6 text-center">Leadership & Social Commitment</h3>
+                    <div class="grid md:grid-cols-3 gap-6 text-center">
+                        <div class="bg-white/20 backdrop-blur-sm p-6 rounded-2xl hover-scale">
+                            <i class="fas fa-flag text-3xl mb-3 float-element"></i>
+                            <h4 class="font-bold mb-2">Leadership</h4>
+                            <p class="text-sm">Proven ability to lead teams and drive meaningful change</p>
+                        </div>
+                        <div class="bg-white/20 backdrop-blur-sm p-6 rounded-2xl hover-scale">
+                            <i class="fas fa-heart text-3xl mb-3 float-element" style="animation-delay: 0.5s;"></i>
+                            <h4 class="font-bold mb-2">Social Commitment</h4>
+                            <p class="text-sm">Dedicated to disability inclusion and educational equity</p>
+                        </div>
+                        <div class="bg-white/20 backdrop-blur-sm p-6 rounded-2xl hover-scale">
+                            <i class="fas fa-infinity text-3xl mb-3 float-element" style="animation-delay: 1s;"></i>
+                            <h4 class="font-bold mb-2">Long-term Dedication</h4>
+                            <p class="text-sm">Consistent alignment between mission and action</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 📸 Swipeable Photo Gallery -->
+    <section id="swipe-gallery" class="py-20 bg-gradient-to-br from-purple-50 to-pink-50">
+        <!-- Decorative elements -->
+        <div class="absolute top-10 left-20 w-32 h-32 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full opacity-30 float-element"></div>
+        <div class="absolute bottom-10 right-20 w-24 h-24 bg-gradient-to-br from-pink-200 to-purple-200 rounded-full opacity-25 float-element" style="animation-delay: 1.5s;"></div>
+        
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="max-w-6xl mx-auto fade-in">
+                <h2 class="text-4xl md:text-5xl font-bold mb-8 text-center text-gradient">Photo Gallery</h2>
+                <p class="text-xl text-gray-700 mb-12 text-center bg-white/70 backdrop-blur-sm p-6 rounded-2xl">
+                    Swipe through our collection of memorable moments and achievements from TEA and the fundraising event activities.
+                </p>
+                
+                <!-- Swipeable Photo Container -->
+                <div class="relative overflow-hidden rounded-2xl bg-white/50 backdrop-blur-sm p-6">
+                    <div class="flex gap-4 overflow-x-auto overflow-y-hidden pb-4 scroll-smooth snap-x snap-mandatory" id="photo-swipe-container" style="scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch;">
+                        <!-- Swipeable Photo 1 -->
+                        <div class="flex-shrink-0 w-80 h-60 bg-gradient-to-br from-purple-200 to-pink-200 rounded-xl flex items-center justify-center overflow-hidden cursor-pointer hover-scale">
+                            <img src="assets/images/i3.jpeg" alt="Gallery Photo 1" class="w-full h-full object-cover">
+                                                    </div>
+                        
+                        <!-- Swipeable Photo 2 -->
+                        <div class="flex-shrink-0 w-80 h-60 bg-gradient-to-br from-pink-200 to-purple-200 rounded-xl flex items-center justify-center overflow-hidden cursor-pointer hover-scale">
+                            <img src="assets/images/i4.jpeg" alt="Gallery Photo 2" class="w-full h-full object-cover">
+                                                    </div>
+                        
+                        <!-- Swipeable Photo 3 -->
+                        <div class="flex-shrink-0 w-80 h-60 bg-gradient-to-br from-purple-200 to-pink-200 rounded-xl flex items-center justify-center overflow-hidden cursor-pointer hover-scale" >
+                            <img src="assets/images/i5.jpeg" alt="Gallery Photo 3" class="w-full h-full object-cover">
+                                                    </div>
+                        
+                        <!-- Swipeable Photo 4 -->
+                        <div class="flex-shrink-0 w-80 h-60 bg-gradient-to-br from-pink-200 to-purple-200 rounded-xl flex items-center justify-center overflow-hidden cursor-pointer hover-scale" >
+                            <img src="assets/images/i6.jpeg" alt="Gallery Photo 4" class="w-full h-full object-cover">
+                                                    </div>
+                        
+                        <!-- Swipeable Photo 5 -->
+                        <div class="flex-shrink-0 w-80 h-60 bg-gradient-to-br from-purple-200 to-pink-200 rounded-xl flex items-center justify-center overflow-hidden cursor-pointer hover-scale" >
+                            <img src="assets/images/i7.jpeg" alt="Gallery Photo 5" class="w-full h-full object-cover">
+                                                    </div>
+                        
+                        <!-- Swipeable Photo 6 -->
+                        <div class="flex-shrink-0 w-80 h-60 bg-gradient-to-br from-pink-200 to-purple-200 rounded-xl flex items-center justify-center overflow-hidden cursor-pointer hover-scale" >
+                            <img src="assets/images/i8.jpeg" alt="Gallery Photo 6" class="w-full h-full object-cover">
+                                                    </div>
+                        
+                        <!-- Swipeable Photo 7 -->
+                        <div class="flex-shrink-0 w-80 h-60 bg-gradient-to-br from-purple-200 to-pink-200 rounded-xl flex items-center justify-center overflow-hidden cursor-pointer hover-scale" >
+                            <img src="assets/images/i9.jpeg" alt="Gallery Photo 7" class="w-full h-full object-cover">
+                                                    </div>
+                        
+                        <!-- Swipeable Photo 8 -->
+                        <div class="flex-shrink-0 w-80 h-60 bg-gradient-to-br from-pink-200 to-purple-200 rounded-xl flex items-center justify-center overflow-hidden cursor-pointer hover-scale" >
+                            <img src="assets/images/i10.jpeg" alt="Gallery Photo 8" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center p-4">
+                                <p class="text-white text-sm opacity-0 hover:opacity-100 transition-opacity">Click to view full size</p>
+                                <p class="text-white text-sm opacity-0 hover:opacity-100 transition-opacity">Click ad swipe to see more">Click to view full size</p>
+                            </div>
+                        </div>
+
+                         <!-- Swipeable Photo 9 -->
+                        <div class="flex-shrink-0 w-80 h-60 bg-gradient-to-br from-pink-200 to-purple-200 rounded-xl flex items-center justify-center overflow-hidden cursor-pointer hover-scale" >
+                            <img src="assets/images/i11.jpeg" alt="Gallery Photo 8" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center p-4">
+                                <p class="text-white text-sm opacity-0 hover:opacity-100 transition-opacity">Click ad swipe to see more">Click to view full size</p>
+                            </div>
+                        </div>
+
+
+                        <!-- Swipeable Photo 10 -->
+                        <div class="flex-shrink-0 w-80 h-60 bg-gradient-to-br from-pink-200 to-purple-200 rounded-xl flex items-center justify-center overflow-hidden cursor-pointer hover-scale" >
+                            <img src="assets/images/i12.jpeg" alt="Gallery Photo 8" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center p-4">
+                                <p class="text-white text-sm opacity-0 hover:opacity-100 transition-opacity">Click ad swipe to see more">Click to view full size</p>
+                            </div>
+                        </div>
+
+                        <!-- Swipeable Photo 11 -->
+                        <div class="flex-shrink-0 w-80 h-60 bg-gradient-to-br from-pink-200 to-purple-200 rounded-xl flex items-center justify-center overflow-hidden cursor-pointer hover-scale" >
+                            <img src="assets/images/i13.jpeg" alt="Gallery Photo 8" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center p-4">
+                                <p class="text-white text-sm opacity-0 hover:opacity-100 transition-opacity">Click ad swipe to see more">Click to view full size</p>
+                            </div>
+                        </div>
+
+                        <!-- Swipeable Photo 12 -->
+                        <div class="flex-shrink-0 w-80 h-60 bg-gradient-to-br from-pink-200 to-purple-200 rounded-xl flex items-center justify-center overflow-hidden cursor-pointer hover-scale" >
+                            <img src="assets/images/i14.jpeg" alt="Gallery Photo 8" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center p-4">
+                                <p class="text-white text-sm opacity-0 hover:opacity-100 transition-opacity">Click ad swipe to see more">Click to view full size</p>
+                            </div>
+                        </div>
+
+                        <!-- Swipeable Photo 13 -->
+                        <div class="flex-shrink-0 w-80 h-60 bg-gradient-to-br from-pink-200 to-purple-200 rounded-xl flex items-center justify-center overflow-hidden cursor-pointer hover-scale" >
+                            <img src="assets/images/i15.jpeg" alt="Gallery Photo 8" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center p-4">
+                                <p class="text-white text-sm opacity-0 hover:opacity-100 transition-opacity">Click ad swipe to see more">Click to view full size</p>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <!-- Swipe Indicators -->
+                    <div class="flex justify-center gap-2 mt-4">
+                        <div class="w-2 h-2 bg-purple-600 rounded-full"></div>
+                        <div class="w-2 h-2 bg-purple-300 rounded-full"></div>
+                        <div class="w-2 h-2 bg-purple-300 rounded-full"></div>
+                        <div class="w-2 h-2 bg-purple-300 rounded-full"></div>
+                        <div class="w-2 h-2 bg-purple-300 rounded-full"></div>
+                        <div class="w-2 h-2 bg-purple-300 rounded-full"></div>
+                        <div class="w-2 h-2 bg-purple-300 rounded-full"></div>
+                        <div class="w-2 h-2 bg-purple-600 rounded-full"></div>
+                    </div>
+                    
+                    <p class="text-sm text-purple-600 mt-6 text-center">👆 Click and swipe horizontally to browse</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7️⃣ How It Works (Technical Overview) -->
+    <section id="how-it-works" class="py-20 bg-gradient-to-br from-white to-purple-50">
+        <!-- Decorative elements -->
+        <div class="absolute top-15 left-15 w-24 h-24 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full opacity-30 float-element"></div>
+        <div class="absolute bottom-15 right-15 w-32 h-32 bg-gradient-to-br from-pink-200 to-purple-200 rounded-full opacity-25 float-element" style="animation-delay: 2s;"></div>
+        
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="max-w-4xl mx-auto fade-in">
+                <h2 class="text-4xl md:text-5xl font-bold mb-8 text-center text-gradient">How It Works (Technical Overview)</h2>
+                <p class="text-xl text-gray-700 mb-12 text-center bg-white/70 backdrop-blur-sm p-6 rounded-2xl">
+                    Audiora integrates embedded AI and directional audio processing into a compact wearable system.
+                </p>
+                
+                <div class="space-y-6 mb-12">
+                    <div class="bg-gradient-to-r from-purple-100 to-pink-100 p-6 rounded-2xl shadow-md flex items-start gap-4 hover-scale backdrop-blur-sm">
+                        <div class="bg-white/80 backdrop-blur-sm p-3 rounded-xl">
+                            <i class="fas fa-microphone text-purple-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg mb-2">Dual microphones capture stereo environmental audio</h4>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-r from-pink-100 to-purple-100 p-6 rounded-2xl shadow-md flex items-start gap-4 hover-scale backdrop-blur-sm">
+                        <div class="bg-white/80 backdrop-blur-sm p-3 rounded-xl">
+                            <i class="fas fa-brain text-purple-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg mb-2">A TinyML model classifies sound types in real time</h4>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-r from-purple-100 to-pink-100 p-6 rounded-2xl shadow-md flex items-start gap-4 hover-scale backdrop-blur-sm">
+                        <div class="bg-white/80 backdrop-blur-sm p-3 rounded-xl">
+                            <i class="fas fa-compass text-purple-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg mb-2">Inter-channel time delay estimates sound direction</h4>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-r from-pink-100 to-purple-100 p-6 rounded-2xl shadow-md flex items-start gap-4 hover-scale backdrop-blur-sm">
+                        <div class="bg-white/80 backdrop-blur-sm p-3 rounded-xl">
+                            <i class="fas fa-chart-line text-purple-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg mb-2">Alerts activate only above a 0.55 confidence threshold</h4>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-r from-purple-100 to-pink-100 p-6 rounded-2xl shadow-md flex items-start gap-4 hover-scale backdrop-blur-sm">
+                        <div class="bg-white/80 backdrop-blur-sm p-3 rounded-xl">
+                            <i class="fas fa-sliders-h text-purple-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg mb-2">Dynamic gain normalization stabilizes signal amplitude</h4>
+                        </div>
+                    </div>
+                </div>
+
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- 9️⃣ Institutional Support & Recognition -->
+    <section class="py-20 bg-gradient-to-br from-white to-purple-50">
+        <!-- Decorative elements -->
+        <div class="absolute top-15 left-20 w-28 h-28 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full opacity-30 float-element"></div>
+        <div class="absolute bottom-15 right-20 w-20 h-20 bg-gradient-to-br from-pink-200 to-purple-200 rounded-full opacity-25 float-element" style="animation-delay: 1.8s;"></div>
+        
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="max-w-4xl mx-auto text-center fade-in">
+                <h2 class="text-4xl md:text-5xl font-bold mb-8 text-gradient">Institutional Support & Recognition</h2>
+                
+                <div class="mb-12">
+                    <h3 class="text-2xl font-bold mb-6 text-purple-800">Supported by:</h3>
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="bg-gradient-to-br from-purple-100 to-pink-100 p-6 rounded-2xl shadow-md hover-scale backdrop-blur-sm">
+                            <div class="w-20 h-20 bg-white/80 backdrop-blur-sm rounded-xl mx-auto mb-4 flex items-center justify-center">
+                                <i class="fas fa-globe text-3xl text-purple-600 float-element"></i>
+                            </div>
+                            <h4 class="font-bold">UNDP Turkey</h4>
+                            <p class="text-sm text-gray-600">Diyarbakır Office</p>
+                        </div>
+                        <div class="bg-gradient-to-br from-pink-100 to-purple-100 p-6 rounded-2xl shadow-md hover-scale backdrop-blur-sm">
+                            <div class="w-20 h-20 bg-white/80 backdrop-blur-sm rounded-xl mx-auto mb-4 flex items-center justify-center">
+                                <i class="fas fa-university text-3xl text-purple-600 float-element" style="animation-delay: 0.3s;"></i>
+                            </div>
+                            <h4 class="font-bold">Dicle University</h4>
+                            <p class="text-sm text-gray-600">Office for Disability Services & Department of Electrical Engineering</p>
+                        </div>
+                        <div class="bg-gradient-to-br from-purple-100 to-pink-100 p-6 rounded-2xl shadow-md hover-scale backdrop-blur-sm">
+                            <div class="w-20 h-20 bg-white/80 backdrop-blur-sm rounded-xl mx-auto mb-4 flex items-center justify-center">
+                                <i class="fas fa-hands-helping text-3xl text-purple-600 float-element" style="animation-delay: 0.6s;"></i>
+                            </div>
+                            <h4 class="font-bold">Turkish Association of the Deaf</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-2xl font-bold mb-6 text-purple-800">Recognition:</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="bg-gradient-to-br from-pink-100 to-purple-100 p-6 rounded-2xl shadow-md hover-scale backdrop-blur-sm">
+                            <div class="w-20 h-20 bg-white/80 backdrop-blur-sm rounded-xl mx-auto mb-4 flex items-center justify-center">
+                                <i class="fas fa-trophy text-3xl text-purple-600 float-element"></i>
+                            </div>
+                            <h4 class="font-bold">Emerging Innovator Awards</h4>
+                            <p class="text-sm text-gray-600">Top 100 Honoree</p>
+                        </div>
+                        <div class="bg-gradient-to-br from-purple-100 to-pink-100 p-6 rounded-2xl shadow-md hover-scale backdrop-blur-sm">
+                            <div class="w-20 h-20 bg-white/80 backdrop-blur-sm rounded-xl mx-auto mb-4 flex items-center justify-center">
+                                <i class="fas fa-newspaper text-3xl text-purple-600 float-element" style="animation-delay: 0.4s;"></i>
+                            </div>
+                            <h4 class="font-bold">Featured in Tigris News</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 10️⃣ Contact & Partnership -->
+    <section id="contact" class="py-20 bg-gradient-to-br from-purple-50 to-pink-50">
+        <!-- Decorative elements -->
+        <div class="absolute top-10 right-15 w-24 h-24 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full opacity-35 float-element"></div>
+        <div class="absolute bottom-10 left-15 w-20 h-20 bg-gradient-to-br from-pink-200 to-purple-200 rounded-full opacity-30 float-element" style="animation-delay: 2.2s;"></div>
+        
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="max-w-4xl mx-auto text-center fade-in">
+                <h2 class="text-4xl md:text-5xl font-bold mb-8 text-gradient">Contact & Collaboration</h2>
+                <p class="text-xl text-gray-700 mb-12 bg-white/70 backdrop-blur-sm p-6 rounded-2xl">
+                    Audiora welcomes collaboration with partners who share our vision for accessible technology.
+                </p>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                    <div class="bg-gradient-to-br from-purple-100 to-pink-100 p-6 rounded-2xl hover-scale backdrop-blur-sm">
+                        <i class="fas fa-handshake text-3xl text-purple-600 mb-4 float-element"></i>
+                        <h3 class="font-bold mb-2">Sponsors</h3>
+                    </div>
+                    <div class="bg-gradient-to-br from-pink-100 to-purple-100 p-6 rounded-2xl hover-scale backdrop-blur-sm">
+                        <i class="fas fa-flask text-3xl text-purple-600 mb-4 float-element" style="animation-delay: 0.3s;"></i>
+                        <h3 class="font-bold mb-2">Research Institutions</h3>
+                    </div>
+                    <div class="bg-gradient-to-br from-purple-100 to-pink-100 p-6 rounded-2xl hover-scale backdrop-blur-sm">
+                        <i class="fas fa-user-md text-3xl text-purple-600 mb-4 float-element" style="animation-delay: 0.6s;"></i>
+                        <h3 class="font-bold mb-2">Medical Professionals</h3>
+                    </div>
+                    <div class="bg-gradient-to-br from-pink-100 to-purple-100 p-6 rounded-2xl hover-scale backdrop-blur-sm">
+                        <i class="fas fa-universal-access text-3xl text-purple-600 mb-4 float-element" style="animation-delay: 0.9s;"></i>
+                        <h3 class="font-bold mb-2">Accessibility Advocates</h3>
+                    </div>
+                    <div class="bg-gradient-to-br from-purple-100 to-pink-100 p-6 rounded-2xl hover-scale backdrop-blur-sm">
+                        <i class="fas fa-microchip text-3xl text-purple-600 mb-4 float-element" style="animation-delay: 1.2s;"></i>
+                        <h3 class="font-bold mb-2">Technology Partners</h3>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-r from-purple-600 to-purple-800 p-8 rounded-2xl text-white">
+                    <h3 class="text-2xl font-bold mb-6">Contact Information:</h3>
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-center justify-center gap-3">
+                            <i class="fas fa-envelope text-xl"></i>
+                            <span class="text-lg">zeryacimen1@gmail.com</span>
+                        </div>
+                        <div class="flex items-center justify-center gap-3">
+                            <i class="fas fa-map-marker-alt text-xl"></i>
+                            <span class="text-lg">Diyarbakır, Türkiye</span>
+                        </div>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="mailto:zeryacimen1@gmail.com?subject=Partnership%20Inquiry%20-%20Audiora" class="bg-white text-purple-600 px-8 py-3 rounded-full font-semibold hover-scale inline-block text-center">
+                            Partner With Audiora
+                        </a>
+                        <a href="mailto:zeryacimen1@gmail.com?subject=Contact%20-%20Audiora%20Inquiry" class="border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover-scale inline-block text-center">
+                            Contact Us
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-6 text-center">
+            <div class="flex items-center justify-center space-x-2 mb-4">
+                <i class="fas fa-headphones text-2xl text-purple-400"></i>
+                <span class="text-2xl font-bold">Audiora</span>
+            </div>
+            <p class="text-gray-400 mb-4">Enhancing safety and independence through AI-powered sound awareness</p>
+            <div class="flex justify-center space-x-6 mb-6">
+                <a href="#" class="text-gray-400 hover:text-purple-400 transition">
+                    <a href="https://github.com/havin89/audiora.git" style="text-decoration: none; color: inherit;">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                </a>
+            </div>
+            <p class="text-gray-500 text-sm"> 2025 Audiora. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Photo Modal -->
+    <div id="photoModal" class="fixed inset-0 bg-black bg-opacity-90 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+            <div class="flex justify-between items-center p-6 border-b border-gray-200">
+                <h3 id="modalTitle" class="text-2xl font-bold text-gradient">Photo Title</h3>
+                <button onclick="closePhotoModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+                <img id="modalImage" src="" alt="" class="w-full h-auto rounded-lg mb-4">
+                <p id="modalDescription" class="text-gray-700 text-lg leading-relaxed"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Photo Gallery Modal -->
+    <div id="galleryModal" class="fixed inset-0 bg-black bg-opacity-90 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden">
+            <div class="flex justify-between items-center p-6 border-b border-gray-200">
+                <h3 id="galleryTitle" class="text-2xl font-bold text-gradient">Photo Gallery</h3>
+                <button onclick="closeGallery()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+                <div id="galleryContent" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Placeholder images will be inserted here -->
+                </div>
+                <div class="mt-8 p-6 bg-purple-50 rounded-lg">
+                    <h4 class="font-bold text-purple-800 mb-2">How to Add Your Photos:</h4>
+                    <ol class="list-decimal list-inside text-gray-700 space-y-2">
+                        <li>Save your photos in the <code class="bg-purple-100 px-2 py-1 rounded">assets/images/</code> folder</li>
+                        <li>Name your files clearly (e.g., <code class="bg-purple-100 px-2 py-1 rounded">fundraising-1.jpg</code>, <code class="bg-purple-100 px-2 py-1 rounded">tea-event-2.jpg</code>)</li>
+                        <li>Update the image paths in the JavaScript file</li>
+                        <li>Add captions to describe each photo's impact</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
