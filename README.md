@@ -207,12 +207,4 @@ Update the base URL and meta tags as needed for your custom domain.
 
 This project is open source and available under the [MIT License](LICENSE).
 
-## 📞 Support
-
-For questions or support regarding the website:
-- Email: [your email]
-- Location: Diyarbakır, Türkiye
-
----
-
 **🎧 Audiora - Enhancing safety and independence through AI-powered sound awareness**
